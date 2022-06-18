@@ -155,5 +155,5 @@ class RateLimit:
 
 __all__ = ("RateLimit", "FloodWait")
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __copyright__ = "Copyright (c) 2022 AYMEN Mohammed ~ https://github.com/AYMENJD"

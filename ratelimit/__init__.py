@@ -95,7 +95,7 @@ class RateLimit:
             await self.redis_client.ttl(self._get_key(identifier, "restrict")) or 0
         )
 
-        return ttl
+        return 0 if ttl < 0 else ttl
 
     async def restrict(self, identifier: str):
         """Rate-limit an identifier.

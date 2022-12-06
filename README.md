@@ -1,11 +1,11 @@
-# py-redis-ratelimit
+# py-redis-ratelimit [![version](https://img.shields.io/pypi/v/py-redis-ratelimit?style=flat&logo=pypi)](https://pypi.org/project/py-redis-ratelimit) [![downloads](https://img.shields.io/pypi/dm/py-redis-ratelimit?style=flat)](https://pypistats.org/packages/py-redis-ratelimit)
 
  A simple asynchronous rate limiter based on redis.
 
 ### Requirements
 
 - python >= 3.7
-- redis >= 4.2.0
+- [redis-py](https://github.com/redis/redis-py) >= 4.2.0
 
 ### Installation
 

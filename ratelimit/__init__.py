@@ -16,7 +16,7 @@ class FloodWait(Exception):
             The period of the action.
 
         retry_after (``int``):
-            The remaining time before the action can be performed again.
+            The remaining time before the action can be re-performed again.
     """
 
     def __init__(self, message: str, rate: int, period: int, retry_after: int) -> None:
@@ -30,7 +30,7 @@ class FloodWait(Exception):
         """Convert the exception to a dictionary."""
         return {
             "message": self.message,
-            "rate": str(self.rate) + "/" + str(self.period),
+            "rate": "{}/{}".format(str(self.rate), str(self.period)),
             "retry_after": self.retry_after,
         }
 
@@ -60,7 +60,7 @@ class RateLimit:
         self, redis_client, prefix: str, rate: int, period: int, retry_after: int = None
     ):
         self.redis_client: Redis = redis_client
-        self.prefix = prefix + ":"
+        self.prefix = "{}:".format(prefix)
         self.rate = rate
         self.period = period
         self.retry_after = period if retry_after is None else retry_after
@@ -94,9 +94,8 @@ class RateLimit:
         ttl = int(
             await self.redis_client.ttl(self._get_key(identifier, "restrict")) or 0
         )
-        if ttl > 0:
-            return ttl
-        return 0
+
+        return ttl
 
     async def restrict(self, identifier: str):
         """Rate-limit an identifier.
@@ -132,7 +131,7 @@ class RateLimit:
             usage = await self.getUsage(identifier)
             u_key = self._get_key(identifier, "usage")
 
-            if usage > self.rate:
+            if usage >= self.rate:
                 await self.redis_client.delete(u_key)
 
                 if restrict:
@@ -150,10 +149,10 @@ class RateLimit:
                     await self.redis_client.expire(u_key, self.period)
 
     def _get_key(self, identifier: str, key: str) -> str:
-        return self.prefix + identifier + ":" + key
+        return "{}{}:{}".format(self.prefix, identifier, key)
 
 
 __all__ = ("RateLimit", "FloodWait")
 
 __version__ = "0.1.2"
-__copyright__ = "Copyright (c) 2022 AYMEN Mohammed ~ https://github.com/AYMENJD"
+__copyright__ = "Copyright (c) 2022-present AYMEN Mohammed ~ https://github.com/AYMENJD"
